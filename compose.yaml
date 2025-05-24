@@ -1,0 +1,16 @@
+# Use postgres/example user/password credentials
+
+services:
+  db:
+    image: postgres:17
+    container_name: postgres17-container
+    environment:
+      POSTGRES_DB: social_media_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Mezilla@1995
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+volumes:
+  db-data:
