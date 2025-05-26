@@ -3,11 +3,11 @@
 services:
   db:
     image: postgres:17
-    container_name: postgres17-container
+    container_name: pg17
     environment:
-      POSTGRES_DB: social_media_db
+      POSTGRES_DB: social
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Mezilla@1995
+      POSTGRES_PASSWORD: admin
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:

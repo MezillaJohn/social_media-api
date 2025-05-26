@@ -4,18 +4,21 @@ import (
 	"context"
 	"database/sql"
 
+	"time"
+
+	"github.com/google/uuid"
 	"github.com/lib/pq"
 )
 
 // define the model or schema for your post table
 type Post struct {
-	ID        int64    `json:"id"`
-	Content   string   `json:"content"`
-	Title     string   `json:"title"`
-	UserID    int64    `json:"user_id"`
-	Tags      []string `json:"tags"`
-	CreatedAt string   `json:"created_at"`
-	UpdatedAt string   `json:"updated_at"`
+	ID        uuid.UUID `json:"id"`
+	Content   string    `json:"content"`
+	Title     string    `json:"title"`
+	UserID    uuid.UUID `json:"user_id"`
+	Tags      []string  `json:"tags"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type PostStorage struct {
@@ -30,8 +33,8 @@ func (storage *PostStorage) Create(ctx context.Context, post *Post) error {
 	err := storage.db.QueryRowContext(
 		ctx,
 		query,
-		post.Title,
 		post.Content,
+		post.Title,
 		post.UserID,
 		pq.Array(post.Tags),
 	).Scan(
