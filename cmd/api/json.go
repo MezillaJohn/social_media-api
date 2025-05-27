@@ -22,8 +22,8 @@ func readJson(w http.ResponseWriter, r *http.Request, data any) error {
 
 func writeJsonError(w http.ResponseWriter, status int, message string) error {
 	type envelope struct {
-		error string
+		Error string `json:"error"`
 	}
 
-	return writeJson(w, status, &envelope{error: message})
+	return writeJson(w, status, &envelope{Error: message})
 }

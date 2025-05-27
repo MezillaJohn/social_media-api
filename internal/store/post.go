@@ -6,6 +6,8 @@ import (
 
 	"time"
 
+	"errors"
+
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 )
@@ -48,5 +50,37 @@ func (storage *PostStorage) Create(ctx context.Context, post *Post) error {
 	}
 
 	return nil
+
+}
+
+func (storage *PostStorage) GetPostById(ctx context.Context, postId uuid.UUID) (*Post, error) {
+	query := `
+	SELECT id, content, title, user_id, tags, created_at, updated_at
+	FROM posts
+	WHERE id = $1;
+	`
+
+	var post Post
+
+	err := storage.db.QueryRowContext(ctx, query, postId).Scan(
+		&post.ID,
+		&post.Content,
+		&post.Title,
+		&post.UserID,
+		pq.Array(&post.Tags),
+		&post.CreatedAt,
+		&post.UpdatedAt,
+	)
+
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrNotFound
+		default:
+			return nil, err
+		}
+	}
+
+	return &post, nil
 
 }
